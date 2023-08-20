@@ -1,0 +1,10 @@
+.container{
+    width: 100%;
+    height: 400px;
+    margin-top: 50px;
+}
+
+.custom-header-container {
+    background-color: red;
+    color: white;
+  }
