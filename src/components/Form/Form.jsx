@@ -39,29 +39,18 @@ const  containerStyles={
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    // const data = new FormData(event.currentTarget);
+    const data = new FormData(event.currentTarget);
 
-    // const receivedData=({
-    //   name:data.get('name'),
-    //   phoneno: data.get('phoneno'),
-    //   email: data.get('email'),
-    // });
-    
-    // if(!receivedData?.name || !receivedData?.phoneno || !receivedData?.email){
-    //   return alert("fill all the fields")
-    // }
-    
-    // // try {
-    //   if(receivedData.email){
-    //     navigate("/grid")
-    //   }
-      
-    // // } catch (error) {
-    // //   console.log(error)
-    // // }
-    
-    // localStorage.setItem('userdetails', JSON.stringify(receivedData));  
-    navigate("grid")
+    const receivedData=({
+      name:data.get('name'),
+      phoneno: data.get('phoneno'),
+      email: data.get('email'),
+    });
+    debugger
+    if(!receivedData?.name || !receivedData?.phoneno || !receivedData?.email){
+      return alert("fill all the fields")
+    }
+    navigate("/grid")
   };
 
   return (
