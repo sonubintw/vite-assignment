@@ -46,7 +46,7 @@ const  containerStyles={
       phoneno: data.get('phoneno'),
       email: data.get('email'),
     });
-    debugger
+    
     if(!receivedData?.name || !receivedData?.phoneno || !receivedData?.email){
       return alert("fill all the fields")
     }

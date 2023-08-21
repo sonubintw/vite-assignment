@@ -1,103 +1,92 @@
-import React from "react";
-import { makeStyles } from "@material-ui/core/styles";
-import TreeView from "@material-ui/lab/TreeView";
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import ChevronRightIcon from "@material-ui/icons/ChevronRight";
-import TreeItem from "@material-ui/lab/TreeItem";
+import React, { useState } from 'react';
+import { TreeView, TreeItem } from '@mui/lab';
+import Checkbox from '@mui/material/Checkbox';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 
-const useViewStyles = makeStyles({
-  root: {}
-});
-
-const useItemStyles = makeStyles((theme) => ({
-  root: {
-    "& > .MuiTreeItem-content > .MuiTreeItem-label": {
-      display: "flex",
-      alignItems: "center",
-      padding: "4px 0",
-      background: "transparent !important",
-      pointerEvents: "none"
-    },
-    "& > .MuiTreeItem-content  > .MuiTreeItem-label::before": {
-      content: "''",
-      display: "inline-block",
-      width: 12,
-      height: 12,
-      marginRight: 8,
-      border: "1px solid #ccc",
-      background: "white"
-    }
+const departmentData = [
+  {
+    "department": "customer_service",
+    "sub_departments": [
+      "support",
+      "customer_success"
+    ]
   },
-  iconContainer: {
-    marginRight: 12,
-    "& > svg": {
-      padding: 8,
-      "&:hover": {
-        opacity: 0.6
-      }
-    }
-  },
-  label: {
-    padding: 0
-  },
-  selected: {
-    "& > .MuiTreeItem-content  > .MuiTreeItem-label::before": {
-      background: theme.palette.primary.main,
-      border: "1px solid transparent"
-    }
+  {
+    "department": "design",
+    "sub_departments": [
+      "graphic_design",
+      "product_design",
+      "web_design"
+    ]
   }
-}));
+];
 
-export default function ControlledTreeView() {
-  const classesView = useViewStyles();
-  const classesItem = useItemStyles();
+const Checking = () => {
+  const [checked, setChecked] = useState([]);
 
-  const [expanded, setExpanded] = React.useState([]);
-  const [selected, setSelected] = React.useState([]);
+  const handleToggle = (value, subDepartments) => () => {
+    const currentIndex = checked.indexOf(value);
+    const newChecked = [...checked];
 
-  const handleToggle = (event, nodeIds) => {
-    if (event.target.nodeName !== "svg") {
-      return;
+    if (currentIndex === -1) {
+      newChecked.push(value);
+      newChecked.push(...subDepartments);
+    } else {
+      newChecked.splice(currentIndex, 1);
+      newChecked.splice(newChecked.indexOf(subDepartments), subDepartments.length);
     }
-    setExpanded(nodeIds);
+
+    setChecked(newChecked);
   };
 
-  const handleSelect = (event, nodeIds) => {
-    if (event.target.nodeName === "svg") {
-      return;
-    }
-    const first = nodeIds[0];
-    if (selected.includes(first)) {
-      setSelected(selected.filter((id) => id !== first));
-    } else {
-      setSelected([first, ...selected]);
-    }
+  const renderSubDepartments = (subDepartments) => {
+    return subDepartments.map((subDept) => (
+      <TreeItem
+        key={subDept}
+        nodeId={subDept}
+        label={
+          <div style={{ display: 'flex', alignItems: 'center' }}>
+            <Checkbox
+              checked={checked.includes(subDept)}
+              onChange={handleToggle(subDept, [])}
+            />
+            {subDept}
+          </div>
+        }
+      />
+    ));
+  };
+
+  const renderDepartments = (data) => {
+    return data.map((dept) => (
+      <TreeItem
+        key={dept.department}
+        nodeId={dept.department}
+        label={
+          <div style={{ display: 'flex', alignItems: 'center' }}>
+            <Checkbox
+              checked={checked.includes(dept.department)}
+              onChange={handleToggle(dept.department, dept.sub_departments)}
+            />
+            {dept.department}
+          </div>
+        }
+      >
+        {renderSubDepartments(dept.sub_departments, dept.department)}
+      </TreeItem>
+      
+    ));
   };
 
   return (
     <TreeView
-      classes={classesView}
-      defaultCollapseIcon={<ExpandMoreIcon />}
-      defaultExpandIcon={<ChevronRightIcon />}
-      expanded={expanded}
-      selected={selected}
-      onNodeToggle={handleToggle}
-      onNodeSelect={handleSelect}
-      multiSelect
+    defaultCollapseIcon={<ExpandMoreIcon />}
+    defaultExpandIcon={<ChevronRightIcon />}
     >
-      <TreeItem classes={classesItem} nodeId="1" label="Applications">
-        <TreeItem classes={classesItem} nodeId="2" label="Calendar" />
-        <TreeItem classes={classesItem} nodeId="3" label="Chrome" />
-        <TreeItem classes={classesItem} nodeId="4" label="Webstorm" />
-      </TreeItem>
-      <TreeItem classes={classesItem} nodeId="5" label="Documents">
-        <TreeItem classes={classesItem} nodeId="6" label="Material-UI">
-          <TreeItem classes={classesItem} nodeId="7" label="src">
-            <TreeItem classes={classesItem} nodeId="8" label="index.js" />
-            <TreeItem classes={classesItem} nodeId="9" label="tree-view.js" />
-          </TreeItem>
-        </TreeItem>
-      </TreeItem>
+      {renderDepartments(departmentData)}
     </TreeView>
   );
-}
+};
+
+export default Checking;
