@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import "./datagrid.css"
 import { createTheme, ThemeProvider } from '@mui/material';
 import { useRedirectLoggedOutUser } from '../../customHook/useRedirectLoggedOutUser';
+import Checking from '../checking/checking';
 
 export default function Datagrid() {
     // useRedirectLoggedOutUser("/")
@@ -25,11 +26,6 @@ export default function Datagrid() {
                 console.error("Error fetching data:", error);
               });
           }
-    // const data=async()=>{
-    //    let z= await fetch("https://jsonplaceholder.typicode.com/posts")
-    //    let a= await z.json()
-    //    console.log(a)
-    // }
     useEffect(()=>{
         fetchData()
     },[])
@@ -51,7 +47,7 @@ export default function Datagrid() {
       });
 
   return (
-    <ThemeProvider theme={theme}>
+    <ThemeProvider theme={theme} >
         <div className="container">
         <DataGrid  
             rows={gridData} 
@@ -68,6 +64,7 @@ export default function Datagrid() {
             }}
             />
         </div>
+        <Checking/>
     </ThemeProvider>
   );
 }

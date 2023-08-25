@@ -35,12 +35,17 @@ const Checking = () => {
     } else {
       newChecked.splice(currentIndex, 1);
       newChecked.splice(newChecked.indexOf(subDepartments), subDepartments.length);
+      console.log(newChecked)
     }
 
     setChecked(newChecked);
   };
 
-  const renderSubDepartments = (subDepartments) => {
+  const isDepartmentChecked = (department, subDepartments) => {
+    return subDepartments.every((subDept) => checked.includes(subDept)) && checked.includes(department);
+  };
+
+  const renderSubDepartments = (subDepartments, department) => {
     return subDepartments.map((subDept) => (
       <TreeItem
         key={subDept}
@@ -66,7 +71,7 @@ const Checking = () => {
         label={
           <div style={{ display: 'flex', alignItems: 'center' }}>
             <Checkbox
-              checked={checked.includes(dept.department)}
+              checked={isDepartmentChecked(dept.department, dept.sub_departments)}
               onChange={handleToggle(dept.department, dept.sub_departments)}
             />
             {dept.department}
@@ -75,14 +80,13 @@ const Checking = () => {
       >
         {renderSubDepartments(dept.sub_departments, dept.department)}
       </TreeItem>
-      
     ));
   };
 
   return (
     <TreeView
-    defaultCollapseIcon={<ExpandMoreIcon />}
-    defaultExpandIcon={<ChevronRightIcon />}
+      defaultCollapseIcon={<ExpandMoreIcon />}
+      defaultExpandIcon={<ChevronRightIcon />}
     >
       {renderDepartments(departmentData)}
     </TreeView>
